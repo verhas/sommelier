@@ -31,6 +31,25 @@ class Generator:
         self.env = Environment(loader=FileSystemLoader(str(self.template_dir)))
         self.string_loader = StringLoader()
 
+    def _resolve_output_path(self, output_path: str, context: Dict[str, Any]) -> str:
+        """Resolve template variables in output path.
+
+        Args:
+            output_path: Output path potentially containing {{ }} or {% %}
+            context: Resolved context dictionary
+
+        Returns:
+            Resolved output path
+        """
+        if '{{' in output_path or '{%' in output_path:
+            try:
+                template = self.env.from_string(output_path)
+                return template.render(context)
+            except Exception as e:
+                logger.warning(f"Error resolving output path '{output_path}': {e}")
+                return output_path
+        return output_path
+
     def generate(self, job_name: str, job: Dict[str, Any], dry_run: bool = False) -> bool:
         """Generate output from template and job definition.
 
@@ -51,6 +70,10 @@ class Generator:
             resolver = TemplateFieldResolver(self.env, context)
             resolved_context = resolver.resolve_all()
             logger.debug(f"Resolved context: {resolved_context}")
+
+            # Also resolve output path using resolved context
+            output_path = self._resolve_output_path(output_path, resolved_context)
+            logger.debug(f"Resolved output path: {output_path}")
         except (ValueError, KeyError) as e:
             logger.error(f"Error resolving context in job '{job_name}': {e}")
             return False
