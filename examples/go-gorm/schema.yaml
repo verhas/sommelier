@@ -1,0 +1,22 @@
+template_dir: templates
+
+jobs:
+  - template: model.go.j2
+    output: generated/model.go
+    context:
+      package_name: models
+      struct_name: User
+      table_name: users
+      fields:
+        - name: ID
+          type: uint
+          gorm_tag: "primaryKey"
+        - name: Username
+          type: string
+          gorm_tag: "column:username;uniqueIndex;not null"
+        - name: Email
+          type: string
+          gorm_tag: "column:email;not null"
+        - name: CreatedAt
+          type: time.Time
+          gorm_tag: "autoCreateTime"

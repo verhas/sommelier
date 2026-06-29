@@ -1,0 +1,20 @@
+use chrono::{DateTime, Utc};
+use serde::{Deserialize, Serialize};
+
+#[derive({{ derive_traits | join(', ') }})]
+pub struct {{ struct_name }} {
+{% for field in fields %}
+    {{ field.attribute }}
+    pub {{ field.name }}: {{ field.type }},
+{% endfor %}
+}
+
+impl {{ struct_name }} {
+    pub fn new({% for field in fields %}{{ field.name }}: {{ field.type }}{{ "," if not loop.last else "" }}{% endfor %}) -> Self {
+        Self {
+{% for field in fields %}
+            {{ field.name }},
+{% endfor %}
+        }
+    }
+}

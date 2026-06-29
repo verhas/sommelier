@@ -1,0 +1,22 @@
+template_dir: templates
+
+jobs:
+  - template: model.py.j2
+    output: generated/model.py
+    context:
+      class_name: User
+      table_name: users
+      fields:
+        - name: id
+          type: Integer
+          primary_key: true
+        - name: username
+          type: String(255)
+          nullable: false
+          unique: true
+        - name: email
+          type: String(255)
+          nullable: false
+        - name: created_at
+          type: DateTime
+          default: func.now()

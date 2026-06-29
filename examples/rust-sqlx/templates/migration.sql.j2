@@ -1,0 +1,10 @@
+-- Create {{ table_name }} table
+CREATE TABLE IF NOT EXISTS {{ table_name }} (
+{% for column in columns %}
+    {{ column.name }} {{ column.definition }}{{ "," if not loop.last else "" }}
+{% endfor %}
+);
+
+-- Create indexes
+CREATE INDEX idx_{{ table_name }}_username ON {{ table_name }}(username);
+CREATE INDEX idx_{{ table_name }}_email ON {{ table_name }}(email);

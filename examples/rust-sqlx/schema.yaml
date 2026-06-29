@@ -1,0 +1,39 @@
+template_dir: templates
+
+jobs:
+  - template: model.rs.j2
+    output: generated/model.rs
+    context:
+      struct_name: User
+      derive_traits:
+        - Debug
+        - Clone
+        - Serialize
+        - Deserialize
+      fields:
+        - name: id
+          type: i64
+          attribute: "#[sqlx(rename = \"id\")]"
+        - name: username
+          type: String
+          attribute: "#[sqlx(rename = \"username\")]"
+        - name: email
+          type: String
+          attribute: "#[sqlx(rename = \"email\")]"
+        - name: created_at
+          type: DateTime<Utc>
+          attribute: "#[sqlx(rename = \"created_at\")]"
+
+  - template: migration.sql.j2
+    output: generated/001_create_users.sql
+    context:
+      table_name: users
+      columns:
+        - name: id
+          definition: "BIGSERIAL PRIMARY KEY"
+        - name: username
+          definition: "VARCHAR(255) NOT NULL UNIQUE"
+        - name: email
+          definition: "VARCHAR(255) NOT NULL"
+        - name: created_at
+          definition: "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"

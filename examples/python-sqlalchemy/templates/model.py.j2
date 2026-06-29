@@ -1,0 +1,21 @@
+from sqlalchemy import Column, DateTime, Integer, String, func
+from sqlalchemy.orm import declarative_base
+
+Base = declarative_base()
+
+
+class {{ class_name }}(Base):
+    __tablename__ = '{{ table_name }}'
+
+{% for field in fields %}
+    {{ field.name }} = Column(
+        {{ field.type }}{{ ",  # primary key" if field.primary_key else "" }}{{ ",  # unique" if field.unique else "" }}{{ ",  # nullable" if field.nullable is sameas false else "" }}
+        {% if field.primary_key %}primary_key=True{% endif %}{{ "," if (field.default or (field.unique or field.nullable is sameas false)) and field.primary_key else "" }}
+        {% if field.default %}default={{ field.default }}{% endif %}{{ "," if field.unique and field.default else "" }}
+        {% if field.unique %}unique=True{% endif %}{{ "," if field.nullable is sameas false and (field.unique or field.default) else "" }}
+        {% if field.nullable is sameas false %}nullable=False{% endif %}
+    )
+
+{% endfor %}
+    def __repr__(self):
+        return f"<{{ class_name }}(id={self.id}, username={self.username})>"

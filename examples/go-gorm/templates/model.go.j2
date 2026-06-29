@@ -1,0 +1,21 @@
+package {{ package_name }}
+
+import "time"
+
+type {{ struct_name }} struct {
+{% for field in fields %}
+    {{ field.name }} {{ field.type }} `gorm:"{{ field.gorm_tag }}"`
+{% endfor %}
+}
+
+func ({{ struct_name | lower }}.TableName()) string {
+    return "{{ table_name }}"
+}
+
+func New{{ struct_name }}(username, email string) *{{ struct_name }} {
+    return &{{ struct_name }}{
+        Username: username,
+        Email: email,
+        CreatedAt: time.Now(),
+    }
+}
