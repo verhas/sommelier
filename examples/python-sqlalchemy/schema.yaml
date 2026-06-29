@@ -1,7 +1,8 @@
 template_dir: templates
 
 jobs:
-  - template: model.py.j2
+  user_model:
+    template: model.py.j2
     output: generated/model.py
     context:
       class_name: User

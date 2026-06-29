@@ -1,7 +1,8 @@
 template_dir: templates
 
 jobs:
-  - template: model.rs.j2
+  user_model:
+    template: model.rs.j2
     output: generated/model.rs
     context:
       struct_name: User
@@ -24,7 +25,8 @@ jobs:
           type: DateTime<Utc>
           attribute: "#[sqlx(rename = \"created_at\")]"
 
-  - template: migration.sql.j2
+  migration:
+    template: migration.sql.j2
     output: generated/001_create_users.sql
     context:
       table_name: users

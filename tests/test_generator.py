@@ -16,7 +16,7 @@ def test_generator_initialization_nonexistent():
 
 
 def test_generate_simple_template(tmp_path):
-    """Test generating output from simple template."""
+    """Test generating output from simple template file."""
     templates_dir = tmp_path / "templates"
     templates_dir.mkdir()
 
@@ -33,7 +33,30 @@ def test_generate_simple_template(tmp_path):
         "context": {"name": "World"}
     }
 
-    result = gen.generate(job)
+    result = gen.generate("test_job", job)
+    assert result is True
+
+    output_file = output_dir / "hello.txt"
+    assert output_file.exists()
+    assert output_file.read_text() == "Hello World!"
+
+
+def test_generate_inline_template(tmp_path):
+    """Test generating with inline template."""
+    templates_dir = tmp_path / "templates"
+    templates_dir.mkdir()
+
+    output_dir = tmp_path / "output"
+    output_dir.mkdir()
+
+    gen = Generator(str(templates_dir))
+    job = {
+        "template": "Hello {{ name }}!",
+        "output": str(output_dir / "hello.txt"),
+        "context": {"name": "World"}
+    }
+
+    result = gen.generate("test_job", job)
     assert result is True
 
     output_file = output_dir / "hello.txt"
@@ -42,7 +65,7 @@ def test_generate_simple_template(tmp_path):
 
 
 def test_generate_missing_template(tmp_path):
-    """Test generate fails with missing template."""
+    """Test generate fails with missing template file."""
     templates_dir = tmp_path / "templates"
     templates_dir.mkdir()
 
@@ -53,7 +76,7 @@ def test_generate_missing_template(tmp_path):
         "context": {}
     }
 
-    result = gen.generate(job)
+    result = gen.generate("test_job", job)
     assert result is False
 
 
@@ -78,7 +101,7 @@ def test_generate_template_with_loops(tmp_path):
         "context": {"items": ["apple", "banana", "cherry"]}
     }
 
-    result = gen.generate(job)
+    result = gen.generate("test_job", job)
     assert result is True
 
     output_file = output_dir / "list.txt"
@@ -105,7 +128,7 @@ def test_generate_dry_run(tmp_path):
         "context": {"value": "123"}
     }
 
-    result = gen.generate(job, dry_run=True)
+    result = gen.generate("test_job", job, dry_run=True)
     assert result is True
     assert not output_file.exists()
 
@@ -123,18 +146,18 @@ def test_generate_all_multiple_jobs(tmp_path):
     output_dir.mkdir()
 
     config = {
-        "jobs": [
-            {
+        "jobs": {
+            "job1": {
                 "template": "one.txt.j2",
                 "output": str(output_dir / "one.txt"),
                 "context": {}
             },
-            {
+            "job2": {
                 "template": "two.txt.j2",
                 "output": str(output_dir / "two.txt"),
                 "context": {}
             }
-        ]
+        }
     }
 
     gen = Generator(str(templates_dir))
@@ -157,18 +180,18 @@ def test_generate_all_partial_failure(tmp_path):
     output_dir.mkdir()
 
     config = {
-        "jobs": [
-            {
+        "jobs": {
+            "good_job": {
                 "template": "good.txt.j2",
                 "output": str(output_dir / "good.txt"),
                 "context": {}
             },
-            {
+            "bad_job": {
                 "template": "missing.txt.j2",
                 "output": str(output_dir / "missing.txt"),
                 "context": {}
             }
-        ]
+        }
     }
 
     gen = Generator(str(templates_dir))
@@ -177,3 +200,29 @@ def test_generate_all_partial_failure(tmp_path):
     assert successful == 1
     assert (output_dir / "good.txt").exists()
     assert not (output_dir / "missing.txt").exists()
+
+
+def test_multiline_inline_template(tmp_path):
+    """Test multiline inline template."""
+    templates_dir = tmp_path / "templates"
+    templates_dir.mkdir()
+
+    output_dir = tmp_path / "output"
+    output_dir.mkdir()
+
+    gen = Generator(str(templates_dir))
+    job = {
+        "template": """class {{ name }} {
+    // Generated class
+}""",
+        "output": str(output_dir / "test.java"),
+        "context": {"name": "TestClass"}
+    }
+
+    result = gen.generate("test_job", job)
+    assert result is True
+
+    output_file = output_dir / "test.java"
+    assert output_file.exists()
+    content = output_file.read_text()
+    assert "class TestClass" in content

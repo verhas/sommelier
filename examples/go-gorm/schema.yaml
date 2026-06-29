@@ -1,7 +1,8 @@
 template_dir: templates
 
 jobs:
-  - template: model.go.j2
+  user_model:
+    template: model.go.j2
     output: generated/model.go
     context:
       package_name: models

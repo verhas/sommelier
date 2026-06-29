@@ -86,7 +86,7 @@ def test_generate_with_custom_output_dir(tmp_path):
     output_dir = tmp_path / "custom_output"
     output_dir.mkdir()
 
-    for job in config['jobs']:
+    for job_name, job in config['jobs'].items():
         job['output'] = str(output_dir / Path(job['output']).name)
 
     gen = Generator(str(template_dir))

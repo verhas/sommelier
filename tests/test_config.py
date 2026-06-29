@@ -9,7 +9,8 @@ def test_load_valid_config(tmp_path):
     config_file.write_text("""
 template_dir: templates
 jobs:
-  - template: test.j2
+  test_job:
+    template: test.j2
     output: output.txt
     context:
       name: John
@@ -18,7 +19,7 @@ jobs:
     config = load_config(str(config_file))
     assert config['template_dir'] == 'templates'
     assert len(config['jobs']) == 1
-    assert config['jobs'][0]['template'] == 'test.j2'
+    assert config['jobs']['test_job']['template'] == 'test.j2'
 
 
 def test_load_nonexistent_config():
@@ -32,40 +33,62 @@ def test_load_empty_config(tmp_path):
     config_file = tmp_path / "empty.yaml"
     config_file.write_text("")
 
-    with pytest.raises(ValueError):
-        load_config(str(config_file))
+    config = load_config(str(config_file))
+    assert config == {}
+
+
+def test_load_default_config(tmp_path):
+    """Test loading default schema."""
+    sommelier_dir = tmp_path / ".sommelier"
+    sommelier_dir.mkdir()
+    schema_file = sommelier_dir / "schema.yaml"
+    schema_file.write_text("""
+jobs:
+  test_job:
+    template: test.j2
+    output: output.txt
+    context: {}
+""")
+
+    import os
+    original_cwd = os.getcwd()
+    try:
+        os.chdir(tmp_path)
+        config = load_config()
+        assert 'jobs' in config
+        assert len(config['jobs']) == 1
+    finally:
+        os.chdir(original_cwd)
 
 
 def test_validate_missing_jobs():
-    """Test validation fails without jobs key."""
+    """Test validation passes without jobs key."""
     config = {"template_dir": "templates"}
-    with pytest.raises(ValueError, match="must contain 'jobs'"):
-        validate_config(config)
+    validate_config(config)
 
 
-def test_validate_jobs_not_list():
-    """Test validation fails when jobs is not a list."""
-    config = {"jobs": "single_job"}
-    with pytest.raises(ValueError, match="must be a list"):
+def test_validate_jobs_not_dict():
+    """Test validation fails when jobs is not a dict."""
+    config = {"jobs": ["single_job"]}
+    with pytest.raises(ValueError, match="must be a dict"):
         validate_config(config)
 
 
 def test_validate_empty_jobs():
-    """Test validation fails with empty jobs list."""
-    config = {"jobs": []}
-    with pytest.raises(ValueError, match="cannot be empty"):
-        validate_config(config)
+    """Test validation passes with empty jobs dict."""
+    config = {"jobs": {}}
+    validate_config(config)
 
 
 def test_validate_job_missing_template():
     """Test validation fails when job missing template."""
     config = {
-        "jobs": [
-            {
+        "jobs": {
+            "job1": {
                 "output": "output.txt",
                 "context": {}
             }
-        ]
+        }
     }
     with pytest.raises(ValueError, match="missing 'template'"):
         validate_config(config)
@@ -74,12 +97,12 @@ def test_validate_job_missing_template():
 def test_validate_job_missing_output():
     """Test validation fails when job missing output."""
     config = {
-        "jobs": [
-            {
+        "jobs": {
+            "job1": {
                 "template": "test.j2",
                 "context": {}
             }
-        ]
+        }
     }
     with pytest.raises(ValueError, match="missing 'output'"):
         validate_config(config)
@@ -88,12 +111,12 @@ def test_validate_job_missing_output():
 def test_validate_job_missing_context():
     """Test validation fails when job missing context."""
     config = {
-        "jobs": [
-            {
+        "jobs": {
+            "job1": {
                 "template": "test.j2",
                 "output": "output.txt"
             }
-        ]
+        }
     }
     with pytest.raises(ValueError, match="missing 'context'"):
         validate_config(config)

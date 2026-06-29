@@ -4,8 +4,7 @@ shared: &base_package
   package: com.example.demo
 
 jobs:
-  user_entity:
-    template: entity.java.j2
+  - template: entity.java.j2
     output: generated/Entity.java
     context:
       <<: *base_package
@@ -25,8 +24,7 @@ jobs:
           type: LocalDateTime
           annotation: "@CreationTimestamp"
 
-  user_dto:
-    template: dto.java.j2
+  - template: dto.java.j2
     output: generated/UserDTO.java
     context:
       <<: *base_package
@@ -39,8 +37,7 @@ jobs:
         - name: email
           type: String
 
-  user_repository:
-    template: repository.java.j2
+  - template: repository.java.j2
     output: generated/UserRepository.java
     context:
       <<: *base_package
@@ -48,8 +45,7 @@ jobs:
       entity_type: User
       id_type: Long
 
-  migration:
-    template: liquibase.xml.j2
+  - template: liquibase.xml.j2
     output: generated/changelog.xml
     context:
       changelog_id: "001-create-users-table"
