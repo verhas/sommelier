@@ -88,9 +88,12 @@ def cmd_init(args):
 #   - template: Either a template filename or inline Jinja2 template
 #   - output: Path where the generated file will be written
 #   - context: Dictionary of variables passed to the template
+#
+# Context field values can contain Jinja2 templates that reference other fields,
+# enabling reusable, hierarchical configuration:
 
 jobs: {}
-  # Example job:
+  # Example 1: Template file reference
   # my_entity:
   #   template: entity.java.j2
   #   output: generated/Entity.java
@@ -99,15 +102,23 @@ jobs: {}
   #     fields:
   #       - name: id
   #         type: Long
-  #
-  # Or with inline template:
+
+  # Example 2: Inline template
   # my_file:
   #   template: |
-  #     # Generated file for {{ name }}
-  #     class {{ name }} { }
-  #   output: generated/{{ name }}.java
+  #     class {{ entity_name }} { }
+  #   output: generated/{{ entity_name }}.java
   #   context:
-  #     name: User
+  #     entity_name: User
+
+  # Example 3: Context field templates (resolved before template rendering)
+  # app_config:
+  #   template: config.properties.j2
+  #   output: generated/config.properties
+  #   context:
+  #     company: acme
+  #     domain: "{{ company }}.com"          # resolved to: acme.com
+  #     service_package: "{{ domain }}.services"  # resolved to: acme.com.services
 """
             with open(schema_path, 'w') as f:
                 f.write(default_schema)
