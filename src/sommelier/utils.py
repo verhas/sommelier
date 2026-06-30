@@ -3,10 +3,17 @@ from pathlib import Path
 from shutil import copy2
 import logging
 from typing import Dict, Any
-from jinja2 import Environment
+from jinja2 import Environment, Undefined
 
 logger = logging.getLogger(__name__)
 
+
+def is_templated(value: Any) -> bool:
+    return isinstance(value, str) and ('{{' in value or '{%' in value)
+
+def purge(resolved, unresolved):
+    for key in resolved.keys():
+        unresolved.pop(key, None)
 
 class TemplateFieldResolver:
     """Resolve template syntax in context field values using fixed-point iteration."""
@@ -30,28 +37,32 @@ class TemplateFieldResolver:
         Returns:
             Dictionary with all resolved values
         """
-        resolved = dict(self.context)  # Start with original values
+        unresolved = dict(self.context) # Start with original values
+        resolved = {}
+        for key, value in unresolved.items():
+            if is_templated(value):
+               continue
+            resolved[key] = value
+
+        purge(resolved, unresolved)
+
         max_iterations = 100
         iteration = 0
 
-        while iteration < max_iterations:
-            changed = False
-            new_resolved = {}
+        while iteration < max_iterations and len(unresolved) > 0 :
 
-            for key, value in resolved.items():
-                new_value = self._resolve_value(value, resolved)
-                if new_value != value:
-                    changed = True
-                new_resolved[key] = new_value
+            for key, value in unresolved.items():
+                try:
+                    new_value = self._resolve_value(value, resolved)
+                    resolved[key] = new_value
+                except Exception as e:
+                    continue
 
-            resolved = new_resolved
+            purge(resolved, unresolved)
             iteration += 1
-
-            if not changed:
-                logger.debug(f"Resolved all fields in {iteration} iteration(s)")
-                return resolved
-
-        raise ValueError("Context resolution did not converge after 100 iterations. Possible circular dependency.")
+        if len(unresolved) > 0:
+            raise ValueError(f"Context resolution did not converge after {max_iterations} iterations.\nPossible circular dependency or unresolvable values: {unresolved}.")
+        return resolved
 
     def _resolve_value(self, value: Any, context: Dict[str, Any]) -> Any:
         """Resolve a single value using the provided context.
@@ -61,21 +72,19 @@ class TemplateFieldResolver:
             context: Current resolved context
 
         Returns:
-            Resolved value
+            Resolved value, or the original value if there is nothing to be resolved or
+            the referenced {{ value }} to be used is not available yet
         """
-        if isinstance(value, str) and ('{{' in value or '{%' in value):
-            try:
-                template = self.env.from_string(value)
-                return template.render(context)
-            except Exception as e:
-                logger.debug(f"Error rendering template '{value}': {e}")
-                return value
+        if is_templated(value):
+            template = self.env.from_string(value)
+            return template.render(context)
         elif isinstance(value, list):
             return [self._resolve_value(item, context) for item in value]
         elif isinstance(value, dict):
             return {k: self._resolve_value(v, context) for k, v in value.items()}
         else:
             return value
+
 
 def ensure_directories(path: str) -> Path:
     """Create directories recursively if they don't exist.
@@ -93,18 +102,18 @@ def ensure_directories(path: str) -> Path:
 
 
 def safe_write_file(path: str, content: str) -> None:
-    """Write content to file with backup of existing file if content changed.
+    """Write content to file with backup of an existing file if content changed.
 
-    If the file already exists with identical content, skip write and backup.
+    If the file already exists with identical content, skip writing and backup.
 
     Args:
         path: File path to write to
         content: Content to write
     """
     p = Path(path)
-    ensure_directories(p.parent)
+    ensure_directories(str(p.parent))
 
-    # If file exists, check if content is identical
+    # If the file exists, check if the content is identical
     if p.exists():
         try:
             existing_content = p.read_text()

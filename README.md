@@ -2,7 +2,8 @@
 
 [![PyPI Version](https://img.shields.io/pypi/v/sommelier.svg)](https://pypi.org/project/sommelier/)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE-MIT)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE-APACHE)
 
 **Language-agnostic boilerplate code generator from YAML data models and Jinja2 templates.**
 
@@ -238,7 +239,12 @@ sommelier/
 
 ## License
 
-MIT License — see [LICENSE](LICENSE) for details.
+Licensed under either of:
+
+- [MIT License](LICENSE-MIT)
+- [Apache License, Version 2.0](LICENSE-APACHE)
+
+at your option.
 
 ## Contributing
 

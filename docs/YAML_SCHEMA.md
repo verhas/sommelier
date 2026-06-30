@@ -2,6 +2,8 @@
 
 Complete reference for Sommelier's YAML configuration format.
 
+**License**: MIT OR Apache 2.0 at your option — See [LICENSE-MIT](../LICENSE-MIT) or [LICENSE-APACHE](../LICENSE-APACHE).
+
 ## Project Structure
 
 The default Sommelier project uses this structure:

@@ -2,6 +2,8 @@
 
 Sommelier uses Jinja2 for template rendering. This guide covers the essentials.
 
+**License**: MIT OR Apache 2.0 at your option — See [LICENSE-MIT](../LICENSE-MIT) or [LICENSE-APACHE](../LICENSE-APACHE).
+
 **Note:** Templates can be either:
 - **File-based**: Reference a template file in `.sommelier/tmplts/`
 - **Inline**: Define template content directly in `.sommelier/schema.yaml`

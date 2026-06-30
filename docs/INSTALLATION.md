@@ -1,5 +1,12 @@
 # Installation Guide
 
+## License
+
+Sommelier is dual-licensed under the **MIT License** and the **Apache License 2.0**. You may choose either license at your option.
+
+- [MIT License](../LICENSE-MIT)
+- [Apache License 2.0](../LICENSE-APACHE)
+
 ## System Requirements
 
 - Python 3.8 or later

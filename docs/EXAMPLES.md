@@ -2,6 +2,8 @@
 
 Complete working examples showing Sommelier in action.
 
+**License**: MIT OR Apache 2.0 at your option — See [LICENSE-MIT](../LICENSE-MIT) or [LICENSE-APACHE](../LICENSE-APACHE).
+
 ## Example 1: Java Spring Boot Entity
 
 Generate a JPA entity with associated DTO and repository.

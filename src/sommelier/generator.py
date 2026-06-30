@@ -1,7 +1,7 @@
 import logging
 from pathlib import Path
 from typing import Dict, Any, Optional
-from jinja2 import Environment, FileSystemLoader, BaseLoader, TemplateNotFound, TemplateSyntaxError
+from jinja2 import Environment, FileSystemLoader, BaseLoader, TemplateNotFound, TemplateSyntaxError, StrictUndefined
 
 from .utils import ensure_directories, safe_write_file, TemplateFieldResolver
 
@@ -28,7 +28,7 @@ class Generator:
         if not self.template_dir.exists():
             raise FileNotFoundError(f"Template directory not found: {template_dir}")
 
-        self.env = Environment(loader=FileSystemLoader(str(self.template_dir)))
+        self.env = Environment(loader=FileSystemLoader(str(self.template_dir)), undefined=StrictUndefined)
         self.string_loader = StringLoader()
 
     def _resolve_output_path(self, output_path: str, context: Dict[str, Any]) -> str:
@@ -71,7 +71,7 @@ class Generator:
             resolved_context = resolver.resolve_all()
             logger.debug(f"Resolved context: {resolved_context}")
 
-            # Also resolve output path using resolved context
+            # Also resolve the output path using resolved context
             output_path = self._resolve_output_path(output_path, resolved_context)
             logger.debug(f"Resolved output path: {output_path}")
         except (ValueError, KeyError) as e:
@@ -83,7 +83,7 @@ class Generator:
 
             if is_inline:
                 logger.info(f"Using inline template for job: {job_name}")
-                env = Environment(loader=self.string_loader)
+                env = Environment(loader=self.string_loader, undefined=StrictUndefined)
                 template = env.from_string(template_str)
             else:
                 logger.info(f"Loading template: {template_str}")

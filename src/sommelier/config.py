@@ -7,7 +7,7 @@ def load_config(config_path: Optional[str] = None) -> Dict[str, Any]:
     """Load and parse YAML configuration file.
 
     Args:
-        config_path: Path to YAML configuration file. If None, uses default schema.
+        config_path: Path to YAML configuration file.
 
     Returns:
         Dictionary with parsed config
@@ -17,8 +17,7 @@ def load_config(config_path: Optional[str] = None) -> Dict[str, Any]:
         yaml.YAMLError: If YAML is invalid
     """
     if config_path is None:
-        config_path = ".sommelier/schema.yaml"
-
+        config_path = Path.cwd() / ".sommelier" / "schema.yaml"
     path = Path(config_path)
     if not path.exists():
         raise FileNotFoundError(f"Config file not found: {config_path}")

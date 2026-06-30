@@ -2,6 +2,8 @@
 
 Get up and running with Sommelier in 5 minutes!
 
+**License**: MIT OR Apache 2.0 at your option — See [LICENSE-MIT](../LICENSE-MIT) or [LICENSE-APACHE](../LICENSE-APACHE).
+
 ## 1. Install Sommelier
 
 ```bash

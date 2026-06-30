@@ -4,10 +4,17 @@ import logging
 import sys
 from pathlib import Path
 
-from . import __version__
-from .config import load_config
-from .generator import Generator
-from .utils import get_example_templates_path, ensure_directories
+try:
+    from . import __version__
+    from .config import load_config
+    from .generator import Generator
+    from .utils import get_example_templates_path, ensure_directories
+except ImportError:
+    sys.path.insert(0, str(Path(__file__).parent.parent))
+    from sommelier import __version__
+    from sommelier.config import load_config
+    from sommelier.generator import Generator
+    from sommelier.utils import get_example_templates_path, ensure_directories
 
 logging.basicConfig(
     level=logging.INFO,
@@ -18,20 +25,16 @@ logger = logging.getLogger(__name__)
 
 def cmd_generate(args):
     """Handle 'generate' command."""
-    config_path = args.config
+    config_path = args.config or ".sommelier/schema.yaml"
     try:
         config = load_config(config_path)
     except Exception as e:
         logger.error(f"Failed to load config: {e}")
         return 1
 
-    if config_path is None:
-        config_path = ".sommelier/schema.yaml"
-        config_dir = Path.cwd()
-    else:
-        config_dir = Path(config_path).parent
+    config_dir = Path(config_path).parent
 
-    template_dir_str = config.get('template_dir', '.sommelier/tmplts')
+    template_dir_str = config.get('template_dir', 'tmplts')
     template_dir = config_dir / template_dir_str if not Path(template_dir_str).is_absolute() else template_dir_str
 
     try:
@@ -63,10 +66,10 @@ def cmd_init(args):
         output_path = Path(output_dir)
 
         sommelier_dir = output_path / '.sommelier'
-        ensure_directories(sommelier_dir)
+        ensure_directories(str(sommelier_dir))
 
         tmplts_dir = sommelier_dir / 'tmplts'
-        ensure_directories(tmplts_dir)
+        ensure_directories(str(tmplts_dir))
 
         # Check and warn about existing schema.yaml
         schema_path = sommelier_dir / 'schema.yaml'
@@ -195,8 +198,8 @@ def main():
         prog='sommelier'
     )
 
-    parser.add_argument('--version', action='version', version=f'%(prog)s {__version__}')
-    parser.add_argument('--verbose', '-v', action='store_true', help='Enable verbose logging')
+    parser.add_argument('--version', '-v', action='version', version=f'%(prog)s {__version__}')
+    parser.add_argument('--verbose', action='store_true', help='Enable verbose logging')
 
     subparsers = parser.add_subparsers(dest='command', help='Available commands')
 
