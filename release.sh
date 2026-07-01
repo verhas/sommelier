@@ -18,11 +18,11 @@ fi
 
 VERSION=$1
 
-echo -e "${BLUE}Releasing Sommelier v${VERSION}...${NC}"
+echo -e "${BLUE}Releasing pati v${VERSION}...${NC}"
 
 # 1. Update version in __init__.py
-echo "Updating version in src/sommelier/__init__.py..."
-sed -i "" "s/__version__ = \".*\"/__version__ = \"${VERSION}\"/g" src/sommelier/__init__.py
+echo "Updating version in src/pati/__init__.py..."
+sed -i "" "s/__version__ = \".*\"/__version__ = \"${VERSION}\"/g" src/pati/__init__.py
 
 # 2. Build
 echo -e "${BLUE}Building package...${NC}"
@@ -44,4 +44,4 @@ git tag -a "v${VERSION}" -m "Release version ${VERSION}"
 git push origin "v${VERSION}"
 
 echo -e "${GREEN}✓ Release v${VERSION} complete!${NC}"
-echo -e "${GREEN}✓ Package available at: https://pypi.org/project/sommelier/${VERSION}/${NC}"
+echo -e "${GREEN}✓ Package available at: https://pypi.org/project/pati/${VERSION}/${NC}"

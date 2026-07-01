@@ -6,7 +6,7 @@ GREEN='\033[0;32m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
-echo -e "${BLUE}Building Sommelier...${NC}"
+echo -e "${BLUE}Building pati...${NC}"
 
 # 1. Clean previous builds
 echo "Cleaning previous builds..."
@@ -19,7 +19,7 @@ pip install --upgrade pip setuptools wheel build
 # 3. Run tests
 echo -e "${BLUE}Running tests...${NC}"
 pip install -e ".[dev]"
-pytest tests/ -v --cov=src/sommelier --cov-report=term-missing
+pytest tests/ -v --cov=src/pati --cov-report=term-missing
 
 # 4. Build distribution packages
 echo -e "${BLUE}Building distributions...${NC}"

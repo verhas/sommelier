@@ -1,35 +1,35 @@
 # YAML Schema Documentation
 
-Complete reference for Sommelier's YAML configuration format.
+Complete reference for pati's YAML configuration format.
 
 **License**: MIT OR Apache 2.0 at your option — See [LICENSE-MIT](../LICENSE-MIT) or [LICENSE-APACHE](../LICENSE-APACHE).
 
 ## Project Structure
 
-The default Sommelier project uses this structure:
+The default pati project uses this structure:
 
 ```
 my-project/
-└── .sommelier/
+└── .pati/
     ├── schema.yaml       # Your configuration file
     └── tmplts/           # Template files directory
 ```
 
-The default schema location is `.sommelier/schema.yaml` and default template directory is `.sommelier/tmplts/`.
+The default schema location is `.pati/schema.yaml` and default template directory is `.pati/tmplts/`.
 
 ## Top-level Keys
 
 ### `template_dir` (optional)
 Path to the directory containing your Jinja2 templates.
 
-**Default:** `.sommelier/tmplts/` (relative to schema.yaml)
+**Default:** `.pati/tmplts/` (relative to schema.yaml)
 
 **Example:**
 ```yaml
 template_dir: templates    # Relative to schema.yaml location
 ```
 
-**Note:** Usually not needed, as `.sommelier/tmplts/` is the default.
+**Note:** Usually not needed, as `.pati/tmplts/` is the default.
 
 ### `shared` (optional)
 Shared data that can be reused across jobs using YAML anchors and aliases.
@@ -114,7 +114,7 @@ context:
 
 ## Template Detection
 
-Sommelier automatically detects whether a template is a filename or inline content:
+pati automatically detects whether a template is a filename or inline content:
 
 - **Inline template** — If contains `{{`, `{%`, or newlines
 - **Template filename** — Simple string without template syntax
@@ -230,7 +230,7 @@ context:
 ## Complete Example
 
 ```yaml
-# Sommelier YAML Schema - .sommelier/schema.yaml
+# pati YAML Schema - .pati/schema.yaml
 
 # Shared configuration for reuse
 shared:
@@ -388,7 +388,7 @@ Check for:
 ERROR: Template not found: entity.java.j2
 ```
 Verify:
-1. File exists in `.sommelier/tmplts/`
+1. File exists in `.pati/tmplts/`
 2. Filename matches exactly (case-sensitive)
 3. No custom `template_dir` is hiding the file
 

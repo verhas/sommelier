@@ -1,11 +1,11 @@
 import re
 from setuptools import setup, find_packages
 
-with open("src/sommelier/__init__.py") as f:
+with open("src/pati/__init__.py") as f:
     version = re.search(r'__version__ = "([^"]+)"', f.read()).group(1)
 
 setup(
-    name="sommelier",
+    name="pati",
     version=version,
     author="Peter Verhas",
     author_email="peter.verhas@gmail.com",
@@ -13,11 +13,11 @@ setup(
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
     license="MIT OR Apache-2.0",
-    url="https://github.com/yourusername/sommelier",
+    url="https://github.com/yourusername/pati",
     packages=find_packages(where="src"),
     package_dir={"": "src"},
     package_data={
-        "sommelier": ["examples/**/*"],
+        "pati": ["examples/**/*"],
     },
     python_requires=">=3.8",
     install_requires=[
@@ -36,7 +36,7 @@ setup(
     },
     entry_points={
         "console_scripts": [
-            "sommelier=sommelier.cli:main",
+            "pati=pati.cli:main",
         ],
     },
     classifiers=[

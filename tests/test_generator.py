@@ -1,6 +1,6 @@
 import pytest
 from pathlib import Path
-from sommelier.generator import Generator
+from pati.generator import Generator
 
 
 def test_generator_initialization(tmp_path):

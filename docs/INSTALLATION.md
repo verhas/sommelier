@@ -2,7 +2,7 @@
 
 ## License
 
-Sommelier is dual-licensed under the **MIT License** and the **Apache License 2.0**. You may choose either license at your option.
+pati is dual-licensed under the **MIT License** and the **Apache License 2.0**. You may choose either license at your option.
 
 - [MIT License](../LICENSE-MIT)
 - [Apache License 2.0](../LICENSE-APACHE)
@@ -14,26 +14,26 @@ Sommelier is dual-licensed under the **MIT License** and the **Apache License 2.
 
 ## Quick Install
 
-Install Sommelier from PyPI:
+Install pati from PyPI:
 
 ```bash
-pip install sommelier
+pip install pati
 ```
 
 ## Verify Installation
 
-Check that Sommelier is installed correctly:
+Check that pati is installed correctly:
 
 ```bash
-sommelier --version
+pati --version
 ```
 
-You should see output like: `sommelier 0.1.0`
+You should see output like: `pati 0.1.0`
 
 Also verify the CLI works:
 
 ```bash
-sommelier --help
+pati --help
 ```
 
 ## First Run
@@ -45,20 +45,20 @@ After installation:
 ```bash
 mkdir my-project
 cd my-project
-sommelier init
+pati init
 ```
 
 This creates:
 ```
 my-project/
-└── .sommelier/
+└── .pati/
     ├── schema.yaml    # Your configuration
     └── tmplts/        # Template files directory
 ```
 
 ### 2. Edit your schema
 
-Open `.sommelier/schema.yaml` and add a job:
+Open `.pati/schema.yaml` and add a job:
 
 ```yaml
 jobs:
@@ -74,7 +74,7 @@ jobs:
 ### 3. Generate code
 
 ```bash
-sommelier generate
+pati generate
 ```
 
 ### 4. Check the output
@@ -88,7 +88,7 @@ cat generated/hello.sh
 View built-in example templates:
 
 ```bash
-sommelier list
+pati list
 ```
 
 Output:
@@ -102,11 +102,11 @@ Available templates:
 
 ## Development Setup
 
-If you want to contribute or modify Sommelier, clone the repository and install in development mode:
+If you want to contribute or modify pati, clone the repository and install in development mode:
 
 ```bash
-git clone https://github.com/yourusername/sommelier.git
-cd sommelier
+git clone https://github.com/yourusername/pati.git
+cd pati
 pip install -e ".[dev]"
 ```
 
@@ -144,12 +144,12 @@ source venv/bin/activate
 # Activate (Windows)
 venv\Scripts\activate
 
-# Install Sommelier
-pip install sommelier
+# Install pati
+pip install pati
 
 # Or for development
-git clone https://github.com/yourusername/sommelier.git
-cd sommelier
+git clone https://github.com/yourusername/pati.git
+cd pati
 pip install -e ".[dev]"
 ```
 
@@ -162,7 +162,7 @@ deactivate
 
 ### Command not found
 
-If `sommelier` command is not found after installation, you may need to add Python's bin directory to your PATH:
+If `pati` command is not found after installation, you may need to add Python's bin directory to your PATH:
 
 - **Linux/macOS**: `~/.local/bin` or `/usr/local/bin`
 - **Windows**: `%APPDATA%\Python\Scripts`
@@ -179,22 +179,22 @@ If you get permission errors when installing to system Python, use a virtual env
 ```bash
 python3 -m venv venv
 source venv/bin/activate
-pip install sommelier
+pip install pati
 ```
 
 ### Default schema not found
 
-If `sommelier generate` fails with "Config file not found: .sommelier/schema.yaml", make sure:
+If `pati generate` fails with "Config file not found: .pati/schema.yaml", make sure:
 
-1. You've run `sommelier init` in the current directory
-2. You're in the correct directory containing `.sommelier/`
-3. The file `.sommelier/schema.yaml` exists
+1. You've run `pati init` in the current directory
+2. You're in the correct directory containing `.pati/`
+3. The file `.pati/schema.yaml` exists
 
 ### Template not found
 
 If you get "Template not found: mytemplate.j2", check:
 
-1. Template file exists in `.sommelier/tmplts/`
+1. Template file exists in `.pati/tmplts/`
 2. Filename matches exactly (case-sensitive)
 3. Filename doesn't have typos
 
@@ -211,15 +211,15 @@ If you see "YAML Error: mapping values are not allowed":
 To upgrade to the latest version:
 
 ```bash
-pip install --upgrade sommelier
+pip install --upgrade pati
 ```
 
 ## Uninstalling
 
-To remove Sommelier:
+To remove pati:
 
 ```bash
-pip uninstall sommelier
+pip uninstall pati
 ```
 
 If you used a virtual environment, also remove it:
@@ -229,20 +229,20 @@ rm -rf venv
 
 ## Project Structure
 
-Sommelier uses a standardized project structure:
+pati uses a standardized project structure:
 
 ```
 my-project/
-├── .sommelier/
+├── .pati/
 │   ├── schema.yaml              # Schema file (always read by default)
 │   └── tmplts/                  # Template files directory (default)
-└── generated/                   # Generated files (created by Sommelier)
+└── generated/                   # Generated files (created by pati)
     ├── file1.java
     ├── file2.sh
     └── config.properties
 ```
 
-You can customize the template directory in `.sommelier/schema.yaml`:
+You can customize the template directory in `.pati/schema.yaml`:
 
 ```yaml
 template_dir: my_templates        # Override default tmplts/

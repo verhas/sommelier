@@ -1,7 +1,7 @@
 import pytest
 from pathlib import Path
-from sommelier.config import load_config
-from sommelier.generator import Generator
+from pati.config import load_config
+from pati.generator import Generator
 
 
 def test_java_spring_example():

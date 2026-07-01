@@ -4,7 +4,7 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
 
-    <changeSet id="{{ changelog_id }}" author="sommelier">
+    <changeSet id="{{ changelog_id }}" author="pati">
         <createTable tableName="{{ table_name }}">
 {% for column in columns %}
             <column name="{{ column.name }}" type="{{ column.type }}"

@@ -1,6 +1,6 @@
-# Sommelier
+# pati
 
-[![PyPI Version](https://img.shields.io/pypi/v/sommelier.svg)](https://pypi.org/project/sommelier/)
+[![PyPI Version](https://img.shields.io/pypi/v/pati.svg)](https://pypi.org/project/pati/)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE-MIT)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE-APACHE)
@@ -9,7 +9,7 @@
 
 Define your data model once in YAML. Generate boilerplate code in any language (Java, Rust, Python, Go, TypeScript, etc.) using Jinja2 templates.
 
-## Why Sommelier?
+## Why pati?
 
 - **Single Source of Truth**: Define your data model once, generate code for multiple languages
 - **Template-Driven**: Use Jinja2 to create language-specific templates
@@ -22,7 +22,7 @@ Define your data model once in YAML. Generate boilerplate code in any language (
 ### Installation
 
 ```bash
-pip install sommelier
+pip install pati
 ```
 
 ### 5-Minute Example
@@ -30,10 +30,10 @@ pip install sommelier
 1. **Initialize a project:**
    ```bash
    mkdir my-project && cd my-project
-   sommelier init
+   pati init
    ```
 
-2. **Edit your data model** (`.sommelier/schema.yaml`):
+2. **Edit your data model** (`.pati/schema.yaml`):
    ```yaml
    jobs:
      user_entity:
@@ -49,7 +49,7 @@ pip install sommelier
              type: String
    ```
 
-3. **Customize a template** (`.sommelier/tmplts/entity.java.j2`):
+3. **Customize a template** (`.pati/tmplts/entity.java.j2`):
    ```jinja2
    package {{ package }};
    
@@ -62,7 +62,7 @@ pip install sommelier
 
 4. **Generate code:**
    ```bash
-   sommelier generate
+   pati generate
    ```
 
 5. **Check the output:**
@@ -87,32 +87,32 @@ pip install sommelier
 
 ### 🛠️ CLI Tools
 ```bash
-# Generate all jobs from default schema (.sommelier/schema.yaml)
-sommelier generate
+# Generate all jobs from default schema (.pati/schema.yaml)
+pati generate
 
 # Generate specific job(s) by name
-sommelier generate pojo_user
+pati generate pojo_user
 
 # Generate jobs matching a glob pattern
-sommelier generate 'pojo*'
+pati generate 'pojo*'
 
 # Generate jobs matching multiple patterns
-sommelier generate 'pojo*' dto_user
+pati generate 'pojo*' dto_user
 
 # Generate from a specific schema
-sommelier generate --config path/to/schema.yaml
+pati generate --config path/to/schema.yaml
 
 # Dry run (preview without writing)
-sommelier generate --dry-run
+pati generate --dry-run
 
 # Override output directory
-sommelier generate --output-dir /path/to/output
+pati generate --output-dir /path/to/output
 
 # Initialize new project
-sommelier init
+pati init
 
 # List available example templates
-sommelier list
+pati list
 ```
 
 ### 📦 Built-in Examples
@@ -169,7 +169,7 @@ schema.yaml          Template files              Generated code
      │               (Jinja2)                         │
      │                   │                            │
      └──────────────────────────────────────────────────→
-                    Sommelier
+                    pati
           (config loader + generator)
 ```
 
@@ -183,8 +183,8 @@ schema.yaml          Template files              Generated code
 
 ### Setup
 ```bash
-git clone https://github.com/yourusername/sommelier.git
-cd sommelier
+git clone https://github.com/yourusername/pati.git
+cd pati
 pip install -e ".[dev]"
 ```
 
@@ -207,40 +207,40 @@ pytest tests/ -v --cov
 
 ```bash
 # Generate from default schema
-sommelier generate [JOB ...] [OPTIONS]
+pati generate [JOB ...] [OPTIONS]
   JOB                     Job name(s) or glob patterns to run (default: all)
                           Examples: pojo_user  'pojo*'  'pojo*' dto_user
-  --config, -c FILE       Path to schema file (default: .sommelier/schema.yaml)
+  --config, -c FILE       Path to schema file (default: .pati/schema.yaml)
   --dry-run               Show what would be generated without writing
   --output-dir DIR        Override output directory for all jobs
 
 # Initialize new project structure
-sommelier init [OPTIONS]
+pati init [OPTIONS]
   --output, -o DIR        Output directory (default: current directory)
 
 # List available example templates
-sommelier list
+pati list
 
 # Show version
-sommelier --version, -v
+pati --version, -v
 
 # Logging level (global flags, mutually exclusive)
-sommelier --verbose COMMAND   # debug output
-sommelier --quiet COMMAND     # warnings and errors only
-sommelier -q COMMAND
-sommelier --silent COMMAND    # errors only
-sommelier -s COMMAND
+pati --verbose COMMAND   # debug output
+pati --quiet COMMAND     # warnings and errors only
+pati -q COMMAND
+pati --silent COMMAND    # errors only
+pati -s COMMAND
 
 # Show help
-sommelier --help
-sommelier COMMAND --help
+pati --help
+pati COMMAND --help
 ```
 
 ## Project Structure
 
 ```
-sommelier/
-├── src/sommelier/           # Main package
+pati/
+├── src/pati/           # Main package
 │   ├── __init__.py          # Package metadata
 │   ├── cli.py               # CLI entry point
 │   ├── config.py            # YAML config loader
@@ -280,8 +280,8 @@ Contributions welcome! Please:
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/yourusername/sommelier/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/sommelier/discussions)
+- **Issues**: [GitHub Issues](https://github.com/yourusername/pati/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/yourusername/pati/discussions)
 - **Docs**: [Full Documentation](docs/)
 
 ## Roadmap

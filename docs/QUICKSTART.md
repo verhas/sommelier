@@ -1,13 +1,13 @@
 # Quick Start Guide
 
-Get up and running with Sommelier in 5 minutes!
+Get up and running with pati in 5 minutes!
 
 **License**: MIT OR Apache 2.0 at your option — See [LICENSE-MIT](../LICENSE-MIT) or [LICENSE-APACHE](../LICENSE-APACHE).
 
-## 1. Install Sommelier
+## 1. Install pati
 
 ```bash
-pip install sommelier
+pip install pati
 ```
 
 ## 2. Initialize a Project
@@ -15,22 +15,22 @@ pip install sommelier
 Initialize a new project in current directory:
 
 ```bash
-sommelier init
+pati init
 ```
 
-This creates the `.sommelier/` directory structure:
+This creates the `.pati/` directory structure:
 ```
-.sommelier/
+.pati/
 ├── schema.yaml    # Your data model configuration
 └── tmplts/        # Template files directory
 ```
 
 ## 3. Explore the Default Schema
 
-Open `.sommelier/schema.yaml`:
+Open `.pati/schema.yaml`:
 
 ```yaml
-# Sommelier Configuration
+# pati Configuration
 # Jobs are defined as a map, where each key is a job name.
 # Each job has:
 #   - template: Either a template filename or inline Jinja2 template
@@ -46,8 +46,8 @@ jobs: {}
 ```
 
 **Key concepts:**
-- `.sommelier/schema.yaml` — Your default schema (no argument needed to use it)
-- `.sommelier/tmplts/` — Location of your Jinja2 templates (default)
+- `.pati/schema.yaml` — Your default schema (no argument needed to use it)
+- `.pati/tmplts/` — Location of your Jinja2 templates (default)
 - `jobs` — Dictionary of generation tasks (key = job name)
   - `template` — Template file name or inline Jinja2 template
   - `output` — Where to write the generated file
@@ -55,7 +55,7 @@ jobs: {}
 
 ## 4. Add a Job with Inline Template
 
-Edit `.sommelier/schema.yaml` and add an inline template:
+Edit `.pati/schema.yaml` and add an inline template:
 
 ```yaml
 jobs:
@@ -80,13 +80,13 @@ jobs:
 Dry run (preview without writing):
 
 ```bash
-sommelier generate --dry-run
+pati generate --dry-run
 ```
 
 Real generation (creates files):
 
 ```bash
-sommelier generate
+pati generate
 ```
 
 Check the output:
@@ -96,7 +96,7 @@ cat generated/hello.sh
 
 ## 6. Use Template Files Instead
 
-Create a template file: `.sommelier/tmplts/entity.java.j2`
+Create a template file: `.pati/tmplts/entity.java.j2`
 
 ```jinja2
 package {{ package }}.entity;
@@ -109,7 +109,7 @@ public class {{ entity_name }} {
 }
 ```
 
-Update `.sommelier/schema.yaml`:
+Update `.pati/schema.yaml`:
 
 ```yaml
 jobs:
@@ -128,7 +128,7 @@ jobs:
 
 Generate:
 ```bash
-sommelier generate
+pati generate
 ```
 
 ## 7. Multiple Jobs
@@ -195,47 +195,47 @@ jobs:
 ## Common Commands
 
 ```bash
-# Generate all jobs from default schema (.sommelier/schema.yaml)
-sommelier generate
+# Generate all jobs from default schema (.pati/schema.yaml)
+pati generate
 
 # Generate a single job by name
-sommelier generate pojo_user
+pati generate pojo_user
 
 # Generate jobs matching a glob pattern
-sommelier generate 'pojo*'
+pati generate 'pojo*'
 
 # Generate jobs matching multiple patterns
-sommelier generate 'pojo*' dto_user
+pati generate 'pojo*' dto_user
 
 # Generate with dry-run
-sommelier generate --dry-run
+pati generate --dry-run
 
 # Generate from a specific schema
-sommelier generate --config path/to/schema.yaml
+pati generate --config path/to/schema.yaml
 
 # Override output directory
-sommelier generate --output-dir /path/to/output
+pati generate --output-dir /path/to/output
 
 # List available example templates
-sommelier list
+pati list
 
 # Initialize new project
-sommelier init
+pati init
 
 # Initialize into a specific directory
-sommelier init --output my-project
+pati init --output my-project
 
 # Show version
-sommelier --version
+pati --version
 
 # Logging level (global, mutually exclusive)
-sommelier --verbose generate    # debug output
-sommelier --quiet generate      # warnings and errors only (-q)
-sommelier --silent generate     # errors only (-s)
+pati --verbose generate    # debug output
+pati --quiet generate      # warnings and errors only (-q)
+pati --silent generate     # errors only (-s)
 
 # Show help
-sommelier --help
-sommelier generate --help
+pati --help
+pati generate --help
 ```
 
 ## Tips

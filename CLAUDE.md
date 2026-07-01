@@ -1,6 +1,6 @@
-# Sommelier - Data Model Code Generator
+# pati - Data Model Code Generator
 
-**Project**: Sommelier - Language-agnostic boilerplate code generator from YAML data models and Jinja2 templates.
+**Project**: pati - Language-agnostic boilerplate code generator from YAML data models and Jinja2 templates.
 
 **Vision**: Define your data model once in YAML. Generate boilerplate code in any language (Java, Rust, Python, Go, TypeScript, etc.) using Jinja2 templates.
 
@@ -9,7 +9,7 @@
 ## Project Structure
 
 ```
-sommelier/
+pati/
 ├── README.md                          # Main documentation
 ├── CLAUDE.md                          # This file (Claude Code instructions)
 ├── setup.py                           # Python package metadata
@@ -23,7 +23,7 @@ sommelier/
 │   ├── TEMPLATE_SYNTAX.md             # Jinja2 template reference
 │   └── EXAMPLES.md                    # Real-world template examples
 ├── src/
-│   └── sommelier/
+│   └── pati/
 │       ├── __init__.py                # Package init with version
 │       ├── cli.py                     # CLI entry point (argparse)
 │       ├── generator.py               # Core generation logic
@@ -63,21 +63,21 @@ sommelier/
 
 ## Core Implementation
 
-### 1. **src/sommelier/__init__.py**
+### 1. **src/pati/__init__.py**
 ```python
 __version__ = "0.1.0"
 __author__ = "Your Name"
 __description__ = "Language-agnostic boilerplate generator from YAML data models and Jinja2 templates"
 ```
 
-### 2. **src/sommelier/config.py**
+### 2. **src/pati/config.py**
 Load and parse YAML configuration file. Should:
 - Read YAML file using `yaml.safe_load()`
 - Validate required keys (`template_dir`, `jobs`)
 - Support YAML anchors and aliases (native in PyYAML)
 - Return dict structure with merged contexts
 
-### 3. **src/sommelier/generator.py**
+### 3. **src/pati/generator.py**
 Core generation logic. Should:
 - Accept config dict and job definition
 - Initialize Jinja2 Environment with template loader
@@ -87,17 +87,17 @@ Core generation logic. Should:
 - Write rendered output to file
 - Return success/failure status with logging
 
-### 4. **src/sommelier/cli.py**
+### 4. **src/pati/cli.py**
 Command-line interface using argparse. Should:
-- `sommelier generate <config.yaml>` — Process all jobs in config
-- `sommelier init --template <name>` — Create skeleton config + template dir
-- `sommelier list-templates` — Show available example templates
+- `pati generate <config.yaml>` — Process all jobs in config
+- `pati init --template <name>` — Create skeleton config + template dir
+- `pati list-templates` — Show available example templates
 - `--dry-run` flag — Show what would be generated without writing
 - `--output-dir` flag — Override output paths from config
 - Proper error handling and user-friendly messages
 - Progress indicators (processing job X of Y)
 
-### 5. **src/sommelier/utils.py**
+### 5. **src/pati/utils.py**
 Helper functions:
 - `ensure_directories(path)` — Create dirs recursively
 - `safe_write_file(path, content)` — Write with backups
@@ -118,7 +118,7 @@ GREEN='\033[0;32m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
-echo -e "${BLUE}Building Sommelier...${NC}"
+echo -e "${BLUE}Building pati...${NC}"
 
 # 1. Clean previous builds
 echo "Cleaning previous builds..."
@@ -131,7 +131,7 @@ pip install --upgrade pip setuptools wheel build
 # 3. Run tests
 echo -e "${BLUE}Running tests...${NC}"
 pip install -e ".[dev]"
-pytest tests/ -v --cov=src/sommelier --cov-report=term-missing
+pytest tests/ -v --cov=src/pati --cov-report=term-missing
 
 # 4. Build distribution packages
 echo -e "${BLUE}Building distributions...${NC}"
@@ -168,11 +168,11 @@ fi
 
 VERSION=$1
 
-echo -e "${BLUE}Releasing Sommelier v${VERSION}...${NC}"
+echo -e "${BLUE}Releasing pati v${VERSION}...${NC}"
 
 # 1. Update version in __init__.py
-echo "Updating version in src/sommelier/__init__.py..."
-sed -i "s/__version__ = \".*\"/__version__ = \"${VERSION}\"/g" src/sommelier/__init__.py
+echo "Updating version in src/pati/__init__.py..."
+sed -i "s/__version__ = \".*\"/__version__ = \"${VERSION}\"/g" src/pati/__init__.py
 
 # 2. Build
 echo -e "${BLUE}Building package...${NC}"
@@ -194,7 +194,7 @@ git tag -a "v${VERSION}" -m "Release version ${VERSION}"
 git push origin "v${VERSION}"
 
 echo -e "${GREEN}✓ Release v${VERSION} complete!${NC}"
-echo -e "${GREEN}✓ Package available at: https://pypi.org/project/sommelier/${VERSION}/${NC}"
+echo -e "${GREEN}✓ Package available at: https://pypi.org/project/pati/${VERSION}/${NC}"
 ```
 
 ---
@@ -203,15 +203,15 @@ echo -e "${GREEN}✓ Package available at: https://pypi.org/project/sommelier/${
 
 ### docs/INSTALLATION.md
 - System requirements (Python 3.8+)
-- pip install sommelier
-- Verify installation: `sommelier --version`
+- pip install pati
+- Verify installation: `pati --version`
 - For development: `git clone ... && pip install -e .[dev]`
 - PyPI link and version badge
 
 ### docs/QUICKSTART.md
 - 5-minute walkthrough
 - Example: Generate Java Spring boilerplate
-- Show command: `sommelier generate examples/java-spring/schema.yaml`
+- Show command: `pati generate examples/java-spring/schema.yaml`
 - Explain output structure
 - Show schema.yaml and one simple template
 - Point to full examples
@@ -245,8 +245,8 @@ echo -e "${GREEN}✓ Package available at: https://pypi.org/project/sommelier/${
 ### README.md (Main)
 - Project description and use cases
 - Feature highlights (language-agnostic, YAML source, Jinja2 templates)
-- Quick install: `pip install sommelier`
-- Quick usage: `sommelier generate schema.yaml`
+- Quick install: `pip install pati`
+- Quick usage: `pati generate schema.yaml`
 - Links to docs: Installation, Quickstart, Examples
 - Screenshots/diagrams (optional: show data model → artifacts flow)
 - Contributing guidelines
@@ -261,18 +261,18 @@ echo -e "${GREEN}✓ Package available at: https://pypi.org/project/sommelier/${
 from setuptools import setup, find_packages
 
 setup(
-    name="sommelier",
+    name="pati",
     version="0.1.0",
     author="Your Name",
     author_email="your.email@example.com",
     description="Language-agnostic boilerplate generator from YAML data models",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
-    url="https://github.com/yourusername/sommelier",
+    url="https://github.com/yourusername/pati",
     packages=find_packages(where="src"),
     package_dir={"": "src"},
     package_data={
-        "sommelier": ["examples/**/*"],
+        "pati": ["examples/**/*"],
     },
     python_requires=">=3.8",
     install_requires=[
@@ -290,7 +290,7 @@ setup(
     },
     entry_points={
         "console_scripts": [
-            "sommelier=sommelier.cli:main",
+            "pati=pati.cli:main",
         ],
     },
     classifiers=[
@@ -314,7 +314,7 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "sommelier"
+name = "pati"
 version = "0.1.0"
 description = "Language-agnostic boilerplate generator from YAML data models"
 readme = "README.md"
@@ -351,13 +351,13 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/yourusername/sommelier"
-Documentation = "https://github.com/yourusername/sommelier/tree/main/docs"
-Repository = "https://github.com/yourusername/sommelier.git"
-Issues = "https://github.com/yourusername/sommelier/issues"
+Homepage = "https://github.com/yourusername/pati"
+Documentation = "https://github.com/yourusername/pati/tree/main/docs"
+Repository = "https://github.com/yourusername/pati.git"
+Issues = "https://github.com/yourusername/pati/issues"
 
 [project.scripts]
-sommelier = "sommelier.cli:main"
+pati = "pati.cli:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
@@ -366,11 +366,11 @@ package-dir = {"" = "src"}
 find = {where = ["src"]}
 
 [tool.setuptools.package-data]
-sommelier = ["examples/**/*"]
+pati = ["examples/**/*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-v --cov=src/sommelier --cov-report=term-missing"
+addopts = "-v --cov=src/pati --cov-report=term-missing"
 
 [tool.black]
 line-length = 100
@@ -432,10 +432,10 @@ pip install -e ".[dev]"
 pytest tests/ -v --cov
 
 # CLI usage
-sommelier generate schema.yaml
-sommelier init --template java-spring
-sommelier list-templates
-sommelier generate schema.yaml --dry-run
+pati generate schema.yaml
+pati init --template java-spring
+pati list-templates
+pati generate schema.yaml --dry-run
 ```
 
 ---

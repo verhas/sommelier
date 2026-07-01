@@ -1,6 +1,6 @@
 import pytest
 from pathlib import Path
-from sommelier.config import load_config, validate_config
+from pati.config import load_config, validate_config
 
 
 def test_load_valid_config(tmp_path):
@@ -39,9 +39,9 @@ def test_load_empty_config(tmp_path):
 
 def test_load_default_config(tmp_path):
     """Test loading default schema."""
-    sommelier_dir = tmp_path / ".sommelier"
-    sommelier_dir.mkdir()
-    schema_file = sommelier_dir / "schema.yaml"
+    pati_dir = tmp_path / ".pati"
+    pati_dir.mkdir()
+    schema_file = pati_dir / "schema.yaml"
     schema_file.write_text("""
 jobs:
   test_job:
