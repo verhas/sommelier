@@ -1,9 +1,12 @@
+import datetime
 import os
 from pathlib import Path
 from shutil import copy2
 import logging
 from typing import Dict, Any
 from jinja2 import Environment, Undefined
+
+import pati
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +23,7 @@ def purge(resolved, unresolved):
 class TemplateFieldResolver:
     """Resolve template syntax in context field values using fixed-point iteration."""
 
-    def __init__(self, env: Environment, job: Dict[str, Any], config: Dict[str, Any]):
+    def __init__(self, env: Environment, job: Dict[str, Any], job_name: str, config: Dict[str, Any]):
         """Initialize the resolver with Jinja2 environment and context.
 
         Args:
@@ -29,31 +32,56 @@ class TemplateFieldResolver:
         """
         self.env = env
         self.job = job
+        self.job_name = job_name
         self.context = job.get('context', {})
         self.config = config
 
-    def merge(self, source: Dict[str, Any], target: Dict[str, Any]):
+    def merge(self, source: Dict[str, Any], target: Dict[str, Any], warn: bool = False):
         for key in source.keys():
             if isinstance(source[key], dict):
                 if not key in target:
                     target[key] = {}
                 if isinstance(target[key], list):
                     for item in target[key]:
-                        self.merge(source[key], item)
+                        self.merge(source[key], item, False)
                 else:
                     if isinstance(target[key], dict):
-                        self.merge(source[key], target[key])
-                return
-            if target.get(key) is None:
-                target[key] = source[key]
+                        self.merge(source[key], target[key], warn)
+            else:
+                if target.get(key) is None:
+                    target[key] = source[key]
+                    if warn:
+                        logger.warning(f"Defining the key '{key}' in '{self.job_name}.defaults' is bad. Just move it to '{self.job_name}.context'.")
 
     def add_defaults(self):
         defaults = self.job.get('defaults')
         if not defaults is None:
-            self.merge(defaults, self.context)
+            self.merge(defaults, self.context, True)
         defaults = self.config.get('defaults', {})
         if not defaults is None:
             self.merge(defaults, self.context)
+        if not '__JOB__' in self.context:
+            self.context['__JOB__'] = self.job_name
+        if not '__TEMPLATE__' in self.context:
+            self.context['__TEMPLATE__'] = self.job.get('template')
+        if not '__DATE__' in self.context:
+            self.context['__DATE__'] = datetime.date.today().isoformat()
+        if not '__TIME__' in self.context:
+            self.context['__TIME__'] = datetime.datetime.now().strftime('%H:%M:%S')
+        if not '__YEAR__' in self.context:
+            self.context['__YEAR__'] = str(datetime.date.today().year)
+        if not '__PATISSERIE_VERSION__' in self.context:
+            self.context['__PATISSERIE_VERSION__'] = pati.__version__
+        output = self.job.get('output')
+        if not '__OUTPUT__' in self.context:
+            self.context['__OUTPUT__'] = output
+        if not is_templated(output):
+            if not '__OUTPUT_STEM__' in self.context:
+                self.context['__OUTPUT_STEM__'] = str(Path(output).stem)
+            if not '__OUTPUT_DIR__' in self.context:
+                self.context['__OUTPUT_DIR__'] = str(Path(output).parent)
+            if not '__OUTPUT_EXT__' in self.context:
+                self.context['__OUTPUT_EXT__'] = str(Path(output).suffix)
 
     def resolve_all(self) -> Dict[str, Any]:
         """Resolve all context fields using fixed-point iteration.
@@ -74,23 +102,30 @@ class TemplateFieldResolver:
 
         purge(resolved, unresolved)
 
-        max_iterations = 100
-        iteration = 0
-
-        while iteration < max_iterations and len(unresolved) > 0:
-
+        changed = True  # becomes False after executing the inner loop if no key was resolved: dead end
+        while changed and len(unresolved) > 0:
+            changed = False
             for key, value in unresolved.items():
                 try:
                     new_value = self._resolve_value(value, resolved)
                     resolved[key] = new_value
+                    changed = True
                 except Exception as e:
                     continue
 
             purge(resolved, unresolved)
-            iteration += 1
+
         if len(unresolved) > 0:
             raise ValueError(
-                f"Context resolution did not converge after {max_iterations} iterations.\nPossible circular dependency or unresolvable values: {unresolved}.")
+                f"Context resolution did not converge .\nPossible circular dependency or unresolvable values: {unresolved}.")
+        output = resolved.get('__OUTPUT__', self.job.get('output'))
+        if not '__OUTPUT_STEM__' in resolved:
+            resolved['__OUTPUT_STEM__'] = str(Path(output).stem)
+        if not '__OUTPUT_DIR__' in resolved:
+            resolved['__OUTPUT_DIR__'] = str(Path(output).parent)
+        if not '__OUTPUT_EXT__' in resolved:
+            resolved['__OUTPUT_EXT__'] = str(Path(output).suffix)
+
         return resolved
 
     def _resolve_value(self, value: Any, context: Dict[str, Any]) -> Any:

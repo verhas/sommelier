@@ -1,8 +1,6 @@
 # Patisserie
 
-<p align="center">
-  <img src="logo.svg" alt="Patisserie logo" width="540"/>
-</p>
+![Pâtisserie](logo.svg)
 
 <p align="center">
   <a href="https://pypi.org/project/patisserie/"><img src="https://img.shields.io/pypi/v/patisserie.svg" alt="PyPI Version"/></a>
@@ -35,9 +33,9 @@ Define your data model once in YAML. Generate boilerplate code in any language (
 
 
      mkdir my-project && cd my-project
-     pati init
+     pati mise
 
-The `pati init` command will create the `.pati` directory for you and create the sample `schema.yaml` and templates files you can edit. 
+The `pati mise` command will create the `.pati` directory for you and create the sample `schema.yaml` and templates files you can edit. 
 
 2. **Edit your data model** (`.pati/schema.yaml`):
    ```yaml
@@ -68,7 +66,7 @@ The `pati init` command will create the `.pati` directory for you and create the
 
 4. **Generate code:**
    ```bash
-   pati generate
+   pati cuire
    ```
 
 5. **Check the output:**
@@ -94,31 +92,29 @@ The `pati init` command will create the `.pati` directory for you and create the
 ### 🛠️ CLI Tools
 ```bash
 # Generate all jobs from default schema (.pati/schema.yaml)
-pati generate
+pati cuire
 
 # Generate specific job(s) by name
-pati generate pojo_user
+pati cuire pojo_user
 
 # Generate jobs matching a glob pattern
-pati generate 'pojo*'
+pati cuire 'pojo*'
 
 # Generate jobs matching multiple patterns
-pati generate 'pojo*' dto_user
+pati cuire 'pojo*' dto_user
 
 # Generate from a specific schema
-pati generate --config path/to/schema.yaml
+pati cuire --config path/to/schema.yaml
 
 # Dry run (preview without writing)
-pati generate --dry-run
+pati cuire --dry-run
 
 # Override output directory
-pati generate --output-dir /path/to/output
+pati cuire --output-dir /path/to/output
 
-# Initialize new project
-pati init
-
-# List available example templates
-pati list
+# Initialize new project, creating a sample yaml
+# and the sample template files in the directory .pati
+pati mise
 ```
 
 ### 📦 Built-in Examples
@@ -127,6 +123,10 @@ pati list
 - **Python SQLAlchemy**: ORM models
 - **Go GORM**: Struct definitions with GORM tags
 
+> These examples are for demonstration purpose only.
+> They are simplified.
+> Real word examples can start from these templates, but they will likely be extended.
+
 ## Documentation
 
 - **[Installation Guide](docs/INSTALLATION.md)** — Setup and troubleshooting
@@ -134,6 +134,7 @@ pati list
 - **[YAML Schema Reference](docs/YAML_SCHEMA.md)** — Complete schema documentation
 - **[Jinja2 Template Syntax](docs/TEMPLATE_SYNTAX.md)** — Template language reference
 - **[Real-World Examples](docs/EXAMPLES.md)** — Complete working examples
+- **[Why Pâtisserie?](docs/NAME.md)** — The philosophy behind the name
 
 ## Example Use Cases
 
@@ -187,6 +188,8 @@ schema.yaml          Template files              Generated code
 
 ## Development
 
+This chapter is about how to develop the code of Pâtisserie itself.
+
 ### Setup
 ```bash
 git clone https://github.com/yourusername/pati.git
@@ -213,7 +216,8 @@ pytest tests/ -v --cov
 
 ```bash
 # Generate from default schema
-pati generate [JOB ...] [OPTIONS]
+pati cuire [JOB ...] [OPTIONS]     # French: "to bake"
+pati generate [JOB ...] [OPTIONS]  # English alias — identical
   JOB                     Job name(s) or glob patterns to run (default: all)
                           Examples: pojo_user  'pojo*'  'pojo*' dto_user
   --config, -c FILE       Path to schema file (default: .pati/schema.yaml)
@@ -221,11 +225,9 @@ pati generate [JOB ...] [OPTIONS]
   --output-dir DIR        Override output directory for all jobs
 
 # Initialize new project structure
-pati init [OPTIONS]
+pati mise [OPTIONS]       # French: "mise en place"
+pati init [OPTIONS]       # English alias — identical
   --output, -o DIR        Output directory (default: current directory)
-
-# List available example templates
-pati list
 
 # Show version
 pati --version, -v

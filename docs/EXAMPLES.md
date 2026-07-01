@@ -1,5 +1,7 @@
 # Real-World Examples
 
+![Pâtisserie](../logo.svg)
+
 Complete working examples showing pati in action.
 
 **License**: MIT OR Apache 2.0 at your option — See [LICENSE-MIT](../LICENSE-MIT) or [LICENSE-APACHE](../LICENSE-APACHE).
@@ -93,10 +95,10 @@ public class {{ class_name }} {
 
 ```bash
 # Generate
-pati generate
+pati cuire
 
 # Or with dry-run
-pati generate --dry-run
+pati cuire --dry-run
 ```
 
 ### Generated Output (generated/User.java)
@@ -215,7 +217,7 @@ jobs:
 ### Usage
 
 ```bash
-pati generate
+pati cuire
 ```
 
 ### Generated Files

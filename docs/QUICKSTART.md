@@ -1,5 +1,7 @@
 # Quick Start Guide
 
+![Pâtisserie](../logo.svg)
+
 Get up and running with pati in 5 minutes!
 
 **License**: MIT OR Apache 2.0 at your option — See [LICENSE-MIT](../LICENSE-MIT) or [LICENSE-APACHE](../LICENSE-APACHE).
@@ -15,7 +17,7 @@ pip install patisserie
 Initialize a new project in current directory:
 
 ```bash
-pati init
+pati mise
 ```
 
 This creates the `.pati/` directory structure:
@@ -80,13 +82,13 @@ jobs:
 Dry run (preview without writing):
 
 ```bash
-pati generate --dry-run
+pati cuire --dry-run
 ```
 
 Real generation (creates files):
 
 ```bash
-pati generate
+pati cuire
 ```
 
 Check the output:
@@ -128,7 +130,7 @@ jobs:
 
 Generate:
 ```bash
-pati generate
+pati cuire
 ```
 
 ## 7. Multiple Jobs
@@ -196,34 +198,31 @@ jobs:
 
 ```bash
 # Generate all jobs from default schema (.pati/schema.yaml)
-pati generate
+pati cuire
 
 # Generate a single job by name
-pati generate pojo_user
+pati cuire pojo_user
 
 # Generate jobs matching a glob pattern
-pati generate 'pojo*'
+pati cuire 'pojo*'
 
 # Generate jobs matching multiple patterns
-pati generate 'pojo*' dto_user
+pati cuire 'pojo*' dto_user
 
 # Generate with dry-run
-pati generate --dry-run
+pati cuire --dry-run
 
 # Generate from a specific schema
-pati generate --config path/to/schema.yaml
+pati cuire --config path/to/schema.yaml
 
 # Override output directory
-pati generate --output-dir /path/to/output
-
-# List available example templates
-pati list
+pati cuire --output-dir /path/to/output
 
 # Initialize new project
-pati init
+pati mise
 
 # Initialize into a specific directory
-pati init --output my-project
+pati mise --output my-project
 
 # Show version
 pati --version
@@ -235,7 +234,7 @@ pati --silent generate     # errors only (-s)
 
 # Show help
 pati --help
-pati generate --help
+pati cuire --help
 ```
 
 ## Tips

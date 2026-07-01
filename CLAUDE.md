@@ -89,8 +89,8 @@ Core generation logic. Should:
 
 ### 4. **src/pati/cli.py**
 Command-line interface using argparse. Should:
-- `pati generate <config.yaml>` — Process all jobs in config
-- `pati init --template <name>` — Create skeleton config + template dir
+- `pati cuire <config.yaml>` — Process all jobs in config
+- `pati mise --template <name>` — Create skeleton config + template dir
 - `pati list-templates` — Show available example templates
 - `--dry-run` flag — Show what would be generated without writing
 - `--output-dir` flag — Override output paths from config
@@ -211,7 +211,7 @@ echo -e "${GREEN}✓ Package available at: https://pypi.org/project/pati/${VERSI
 ### docs/QUICKSTART.md
 - 5-minute walkthrough
 - Example: Generate Java Spring boilerplate
-- Show command: `pati generate examples/java-spring/schema.yaml`
+- Show command: `pati cuire examples/java-spring/schema.yaml`
 - Explain output structure
 - Show schema.yaml and one simple template
 - Point to full examples
@@ -246,7 +246,7 @@ echo -e "${GREEN}✓ Package available at: https://pypi.org/project/pati/${VERSI
 - Project description and use cases
 - Feature highlights (language-agnostic, YAML source, Jinja2 templates)
 - Quick install: `pip install pati`
-- Quick usage: `pati generate schema.yaml`
+- Quick usage: `pati cuire schema.yaml`
 - Links to docs: Installation, Quickstart, Examples
 - Screenshots/diagrams (optional: show data model → artifacts flow)
 - Contributing guidelines
@@ -432,10 +432,10 @@ pip install -e ".[dev]"
 pytest tests/ -v --cov
 
 # CLI usage
-pati generate schema.yaml
-pati init --template java-spring
+pati cuire schema.yaml
+pati mise --template java-spring
 pati list-templates
-pati generate schema.yaml --dry-run
+pati cuire schema.yaml --dry-run
 ```
 
 ---

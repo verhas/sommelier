@@ -179,30 +179,12 @@ jobs: {}
         logger.info(f"Next steps:")
         logger.info(f"1. Edit .pati/schema.yaml to define your jobs")
         logger.info(f"2. Customize templates in .pati/tmplts/ as needed")
-        logger.info(f"3. Run: pati generate")
+        logger.info(f"3. Run: pati cuire  (or: pati generate)")
         return 0
 
     except Exception as e:
         logger.error(f"Failed to initialize project: {e}")
         return 1
-
-
-def cmd_list(args):
-    """Handle 'list' command."""
-    examples_dir = get_example_templates_path()
-
-    if not examples_dir.exists():
-        logger.error(f"Examples directory not found: {examples_dir}")
-        return 1
-
-    templates = [d.name for d in examples_dir.iterdir() if d.is_dir()]
-    templates.sort()
-
-    print("Available templates:")
-    for template in templates:
-        print(f"  - {template}")
-
-    return 0
 
 
 def main():
@@ -220,8 +202,14 @@ def main():
 
     subparsers = parser.add_subparsers(dest='command', help='Available commands')
 
+    # init command
+    init_parser = subparsers.add_parser('mise', aliases=['init'], help='Initialize new project')
+    init_parser.add_argument('--output', '-o', help='Output directory (default: current)')
+    init_parser.set_defaults(func=cmd_init)
+
     # generate command
-    gen_parser = subparsers.add_parser('generate', help='Generate boilerplate from schema')
+    gen_parser = subparsers.add_parser('cuire', aliases=['generate', 'gen', 'bake'],
+                                       help='Generate boilerplate from schema')
     gen_parser.add_argument('--config', '-c', nargs='?', default=None,
                             help='Path to schema file (default: .pati/schema.yaml)')
     gen_parser.add_argument('jobs', nargs='*', metavar='JOB',
@@ -229,15 +217,6 @@ def main():
     gen_parser.add_argument('--dry-run', action='store_true', help='Show what would be generated without writing')
     gen_parser.add_argument('--output-dir', help='Override output directory for all jobs')
     gen_parser.set_defaults(func=cmd_generate)
-
-    # init command
-    init_parser = subparsers.add_parser('init', help='Initialize new project')
-    init_parser.add_argument('--output', '-o', help='Output directory (default: current)')
-    init_parser.set_defaults(func=cmd_init)
-
-    # list command
-    list_parser = subparsers.add_parser('list', help='List available templates')
-    list_parser.set_defaults(func=cmd_list)
 
     args = parser.parse_args()
 

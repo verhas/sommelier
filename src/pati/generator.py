@@ -67,7 +67,7 @@ class Generator:
 
         try:
             # Resolve template variables in context
-            resolver = TemplateFieldResolver(self.env, job, self.config)
+            resolver = TemplateFieldResolver(self.env, job, job_name, self.config)
             resolved_context = resolver.resolve_all()
             logger.debug(f"Resolved context: {resolved_context}")
 

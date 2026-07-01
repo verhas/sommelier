@@ -64,7 +64,7 @@
         font-family="Georgia,'Times New Roman',serif"
         font-size="54" font-weight="bold"
         fill="white" letter-spacing="-1"
-        filter="url(#glow)">Patisserie</text>
+        filter="url(#glow)">P&#xe2;tisserie</text>
 
   <!-- Tagline -->
   <text x="163" y="108"

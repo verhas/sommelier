@@ -1,5 +1,7 @@
 # Installation Guide
 
+![Pâtisserie](../logo.svg)
+
 ## License
 
 pati is dual-licensed under the **MIT License** and the **Apache License 2.0**. You may choose either license at your option.
@@ -45,7 +47,7 @@ After installation:
 ```bash
 mkdir my-project
 cd my-project
-pati init
+pati mise
 ```
 
 This creates:
@@ -74,30 +76,13 @@ jobs:
 ### 3. Generate code
 
 ```bash
-pati generate
+pati cuire
 ```
 
 ### 4. Check the output
 
 ```bash
 cat generated/hello.sh
-```
-
-## List Available Templates
-
-View built-in example templates:
-
-```bash
-pati list
-```
-
-Output:
-```
-Available templates:
-  - go-gorm
-  - java-spring
-  - python-sqlalchemy
-  - rust-sqlx
 ```
 
 ## Development Setup
@@ -184,9 +169,9 @@ pip install patisserie
 
 ### Default schema not found
 
-If `pati generate` fails with "Config file not found: .pati/schema.yaml", make sure:
+If `pati cuire` fails with "Config file not found: .pati/schema.yaml", make sure:
 
-1. You've run `pati init` in the current directory
+1. You've run `pati mise` in the current directory
 2. You're in the correct directory containing `.pati/`
 3. The file `.pati/schema.yaml` exists
 
