@@ -15,7 +15,7 @@ def test_java_spring_example():
     config = load_config(str(schema_file))
     template_dir = example_dir / "templates"
 
-    gen = Generator(str(template_dir))
+    gen = Generator(str(template_dir), config)
     successful = gen.generate_all(config, dry_run=True)
 
     assert successful > 0
@@ -32,7 +32,7 @@ def test_rust_sqlx_example():
     config = load_config(str(schema_file))
     template_dir = example_dir / "templates"
 
-    gen = Generator(str(template_dir))
+    gen = Generator(str(template_dir), config)
     successful = gen.generate_all(config, dry_run=True)
 
     assert successful > 0
@@ -49,7 +49,7 @@ def test_python_example():
     config = load_config(str(schema_file))
     template_dir = example_dir / "templates"
 
-    gen = Generator(str(template_dir))
+    gen = Generator(str(template_dir), config)
     successful = gen.generate_all(config, dry_run=True)
 
     assert successful > 0
@@ -66,7 +66,7 @@ def test_go_example():
     config = load_config(str(schema_file))
     template_dir = example_dir / "templates"
 
-    gen = Generator(str(template_dir))
+    gen = Generator(str(template_dir), config)
     successful = gen.generate_all(config, dry_run=True)
 
     assert successful > 0
@@ -89,7 +89,7 @@ def test_generate_with_custom_output_dir(tmp_path):
     for job_name, job in config['jobs'].items():
         job['output'] = str(output_dir / Path(job['output']).name)
 
-    gen = Generator(str(template_dir))
+    gen = Generator(str(template_dir), config)
     successful = gen.generate_all(config, dry_run=False)
 
     assert successful > 0

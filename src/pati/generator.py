@@ -18,12 +18,13 @@ class StringLoader(BaseLoader):
 class Generator:
     """Template-based code generator."""
 
-    def __init__(self, template_dir: str):
+    def __init__(self, template_dir: str, config: Dict[str, Any]):
         """Initialize generator with template directory.
 
         Args:
             template_dir: Path to directory containing Jinja2 templates
         """
+        self.config = config
         self.template_dir = Path(template_dir)
         if not self.template_dir.exists():
             raise FileNotFoundError(f"Template directory not found: {template_dir}")
@@ -63,11 +64,10 @@ class Generator:
         """
         template_str = job.get('template')
         output_path = job.get('output')
-        context = job.get('context', {})
 
         try:
             # Resolve template variables in context
-            resolver = TemplateFieldResolver(self.env, context)
+            resolver = TemplateFieldResolver(self.env, job, self.config)
             resolved_context = resolver.resolve_all()
             logger.debug(f"Resolved context: {resolved_context}")
 
@@ -125,6 +125,7 @@ class Generator:
         Returns:
             Number of successful generations
         """
+        self.config = config
         jobs = config.get('jobs', {})
         total = len(jobs)
         successful = 0

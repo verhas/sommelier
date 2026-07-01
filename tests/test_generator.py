@@ -5,14 +5,14 @@ from pati.generator import Generator
 
 def test_generator_initialization(tmp_path):
     """Test Generator initialization with valid template directory."""
-    gen = Generator(str(tmp_path))
+    gen = Generator(str(tmp_path),{})
     assert gen.template_dir == tmp_path
 
 
 def test_generator_initialization_nonexistent():
     """Test Generator initialization fails with non-existent directory."""
     with pytest.raises(FileNotFoundError):
-        Generator("/nonexistent/path")
+        Generator("/nonexistent/path", {})
 
 
 def test_generate_simple_template(tmp_path):
@@ -26,7 +26,7 @@ def test_generate_simple_template(tmp_path):
     output_dir = tmp_path / "output"
     output_dir.mkdir()
 
-    gen = Generator(str(templates_dir))
+    gen = Generator(str(templates_dir), {})
     job = {
         "template": "hello.txt.j2",
         "output": str(output_dir / "hello.txt"),
@@ -49,7 +49,7 @@ def test_generate_inline_template(tmp_path):
     output_dir = tmp_path / "output"
     output_dir.mkdir()
 
-    gen = Generator(str(templates_dir))
+    gen = Generator(str(templates_dir), {})
     job = {
         "template": "Hello {{ name }}!",
         "output": str(output_dir / "hello.txt"),
@@ -69,7 +69,7 @@ def test_generate_missing_template(tmp_path):
     templates_dir = tmp_path / "templates"
     templates_dir.mkdir()
 
-    gen = Generator(str(templates_dir))
+    gen = Generator(str(templates_dir), {})
     job = {
         "template": "missing.j2",
         "output": str(tmp_path / "output.txt"),
@@ -94,7 +94,7 @@ def test_generate_template_with_loops(tmp_path):
     output_dir = tmp_path / "output"
     output_dir.mkdir()
 
-    gen = Generator(str(templates_dir))
+    gen = Generator(str(templates_dir), {})
     job = {
         "template": "list.txt.j2",
         "output": str(output_dir / "list.txt"),
@@ -121,7 +121,7 @@ def test_generate_dry_run(tmp_path):
 
     output_file = tmp_path / "output.txt"
 
-    gen = Generator(str(templates_dir))
+    gen = Generator(str(templates_dir), {})
     job = {
         "template": "test.txt.j2",
         "output": str(output_file),
@@ -160,7 +160,7 @@ def test_generate_all_multiple_jobs(tmp_path):
         }
     }
 
-    gen = Generator(str(templates_dir))
+    gen = Generator(str(templates_dir), {})
     successful = gen.generate_all(config)
 
     assert successful == 2
@@ -194,7 +194,7 @@ def test_generate_all_partial_failure(tmp_path):
         }
     }
 
-    gen = Generator(str(templates_dir))
+    gen = Generator(str(templates_dir), {})
     successful = gen.generate_all(config)
 
     assert successful == 1
@@ -210,7 +210,7 @@ def test_multiline_inline_template(tmp_path):
     output_dir = tmp_path / "output"
     output_dir.mkdir()
 
-    gen = Generator(str(templates_dir))
+    gen = Generator(str(templates_dir), {})
     job = {
         "template": """class {{ name }} {
     // Generated class

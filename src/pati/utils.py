@@ -11,22 +11,49 @@ logger = logging.getLogger(__name__)
 def is_templated(value: Any) -> bool:
     return isinstance(value, str) and ('{{' in value or '{%' in value)
 
+
 def purge(resolved, unresolved):
     for key in resolved.keys():
         unresolved.pop(key, None)
 
+
 class TemplateFieldResolver:
     """Resolve template syntax in context field values using fixed-point iteration."""
 
-    def __init__(self, env: Environment, context: Dict[str, Any]):
-        """Initialize resolver with Jinja2 environment and context.
+    def __init__(self, env: Environment, job: Dict[str, Any], config: Dict[str, Any]):
+        """Initialize the resolver with Jinja2 environment and context.
 
         Args:
             env: Jinja2 Environment
             context: Dictionary of context values
         """
         self.env = env
-        self.context = context
+        self.job = job
+        self.context = job.get('context', {})
+        self.config = config
+
+    def merge(self, source: Dict[str, Any], target: Dict[str, Any]):
+        for key in source.keys():
+            if isinstance(source[key], dict):
+                if not key in target:
+                    target[key] = {}
+                if isinstance(target[key], list):
+                    for item in target[key]:
+                        self.merge(source[key], item)
+                else:
+                    if isinstance(target[key], dict):
+                        self.merge(source[key], target[key])
+                return
+            if target.get(key) is None:
+                target[key] = source[key]
+
+    def add_defaults(self):
+        defaults = self.job.get('defaults')
+        if not defaults is None:
+            self.merge(defaults, self.context)
+        defaults = self.config.get('defaults', {})
+        if not defaults is None:
+            self.merge(defaults, self.context)
 
     def resolve_all(self) -> Dict[str, Any]:
         """Resolve all context fields using fixed-point iteration.
@@ -37,11 +64,12 @@ class TemplateFieldResolver:
         Returns:
             Dictionary with all resolved values
         """
-        unresolved = dict(self.context) # Start with original values
+        self.add_defaults()
+        unresolved = dict(self.context)  # Start with original values
         resolved = {}
         for key, value in unresolved.items():
             if is_templated(value):
-               continue
+                continue
             resolved[key] = value
 
         purge(resolved, unresolved)
@@ -49,7 +77,7 @@ class TemplateFieldResolver:
         max_iterations = 100
         iteration = 0
 
-        while iteration < max_iterations and len(unresolved) > 0 :
+        while iteration < max_iterations and len(unresolved) > 0:
 
             for key, value in unresolved.items():
                 try:
@@ -61,7 +89,8 @@ class TemplateFieldResolver:
             purge(resolved, unresolved)
             iteration += 1
         if len(unresolved) > 0:
-            raise ValueError(f"Context resolution did not converge after {max_iterations} iterations.\nPossible circular dependency or unresolvable values: {unresolved}.")
+            raise ValueError(
+                f"Context resolution did not converge after {max_iterations} iterations.\nPossible circular dependency or unresolvable values: {unresolved}.")
         return resolved
 
     def _resolve_value(self, value: Any, context: Dict[str, Any]) -> Any:

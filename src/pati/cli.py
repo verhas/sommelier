@@ -39,7 +39,7 @@ def cmd_generate(args):
     template_dir = config_dir / template_dir_str if not Path(template_dir_str).is_absolute() else template_dir_str
 
     try:
-        gen = Generator(str(template_dir))
+        gen = Generator(str(template_dir), config)
     except Exception as e:
         logger.error(f"Failed to initialize generator: {e}")
         return 1
@@ -222,8 +222,10 @@ def main():
 
     # generate command
     gen_parser = subparsers.add_parser('generate', help='Generate boilerplate from schema')
-    gen_parser.add_argument('--config', '-c', nargs='?', default=None, help='Path to schema file (default: .pati/schema.yaml)')
-    gen_parser.add_argument('jobs', nargs='*', metavar='JOB', help='Job name(s) or glob patterns to run (default: all jobs)')
+    gen_parser.add_argument('--config', '-c', nargs='?', default=None,
+                            help='Path to schema file (default: .pati/schema.yaml)')
+    gen_parser.add_argument('jobs', nargs='*', metavar='JOB',
+                            help='Job name(s) or glob patterns to run (default: all jobs)')
     gen_parser.add_argument('--dry-run', action='store_true', help='Show what would be generated without writing')
     gen_parser.add_argument('--output-dir', help='Override output directory for all jobs')
     gen_parser.set_defaults(func=cmd_generate)
